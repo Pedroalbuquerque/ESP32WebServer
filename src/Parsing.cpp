@@ -128,6 +128,11 @@ bool ESP32WebServer::_parseRequest(WiFiClient& client) {
   }
   _currentHandler = handler;
 
+  //clear arguments
+  delete[] _currentArgs;
+  _currentArgs = 0;
+  _currentArgCount = 0;
+
   String formData;
   // below is needed only when POST type request
   if (method == HTTP_POST || method == HTTP_PUT || method == HTTP_PATCH || method == HTTP_DELETE){
@@ -270,9 +275,6 @@ void ESP32WebServer::_parseArguments(String data) {
   DEBUG_OUTPUT.print("args: ");
   DEBUG_OUTPUT.println(data);
 #endif
-  if (_currentArgs)
-    delete[] _currentArgs;
-  _currentArgs = 0;
   if (data.length() == 0) {
     _currentArgCount = 0;
     _currentArgs = new RequestArgument[1];
